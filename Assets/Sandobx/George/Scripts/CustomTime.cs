@@ -1,18 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomTime : MonoBehaviour
+public static class CustomTime
 {
-    // Start is called before the first frame update
-    void Start()
+    public static float LocalTimeScale = 1f;
+    public static float DeltaTime
     {
-        
+        get
+        {
+            return Time.deltaTime * LocalTimeScale;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public static bool IsPaused
     {
-        
+        get
+        {
+            return LocalTimeScale == 0;
+        }
+    }
+
+    public static float TimeScale
+    {
+        get
+        {
+            return Time.timeScale * LocalTimeScale;
+        }
     }
 }
