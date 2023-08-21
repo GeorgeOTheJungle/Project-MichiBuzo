@@ -20,6 +20,8 @@ public class InputComponent : MonoBehaviour
 
     private void Update()
     {
-        inputActions.Player.Movement.performed += _ => movementTrigger?.Invoke(inputActions.Player.Movement.ReadValue<Vector2>());
+        //moveTrigger?.Invoke(playerInput.Player.Movement.ReadValue<Vector2>());
+       movementTrigger?.Invoke(inputActions.Player.Movement.ReadValue<Vector2>());
+        //inputActions.Player.Movement.performed += _ => movementTrigger?.Invoke(inputActions.Player.Movement.ReadValue<Vector2>());
     }
 }

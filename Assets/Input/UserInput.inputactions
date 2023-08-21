@@ -30,7 +30,7 @@
                 {
                     "name": "up",
                     "id": "93dbdcfb-8b1c-4529-a038-639a62c477a8",
-                    "path": "",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -41,7 +41,7 @@
                 {
                     "name": "down",
                     "id": "b134e4b8-283d-42e3-9afa-c147d43935d6",
-                    "path": "",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
