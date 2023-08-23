@@ -15,10 +15,6 @@ public class WanderingEnemyComponent : EnemyComponent
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector2(transform.position.x - range,transform.position.y), new Vector2(transform.position.x + range, transform.position.y));
     }
-    public override void OnKill()
-    {
-        throw new System.NotImplementedException();
-    }
 
     public override void Start()
     {
@@ -31,7 +27,14 @@ public class WanderingEnemyComponent : EnemyComponent
 
     private void Update()
     {
+        if (canMove == false) return;
         Wander();
+    }
+
+    public override void OnKill()
+    {
+        base.OnKill();
+        canMove = false;
     }
 
     private void Wander()

@@ -2,17 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChaserEnemyComponent : MonoBehaviour
+public class ChaserEnemyComponent : EnemyComponent
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private float attackRange = 0.5f;
+    [SerializeField] private float moveSpeed = 1.5f;
+
+    private Transform playerTransform;
+    private Vector2 playerPos;
+    private void OnDrawGizmosSelected()
     {
-        
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Awake()
     {
-        
+        base.Awake();
+        playerTransform = GameObject.FindGameObjectWithTag("FollowPoint").GetComponent<Transform>();
     }
+
+    private void Update()
+    {
+        if (canMove == false) return;
+        Vector2 playerPositionRelative = playerTransform.InverseTransformPoint(transform.position);
+        if(Vector2.Distance(transform.position, playerTransform.position) < attackRange)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, moveSpeed * CustomTime.DeltaTime);
+        }
+    }
+
+    public override void Start()
+    {
+        moveSpeed = Random.Range(minSpeed, maxSpeed);
+    }
+
 }

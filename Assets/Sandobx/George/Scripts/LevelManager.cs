@@ -12,12 +12,13 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private float maxHeight;
 
     [Header("Posible levels: "), Space(10)]
-    [SerializeField] private int totalFillLevels;
+    [SerializeField] private int baseFillLevels;
     [SerializeField] private float levelSeparation;
     [Space(10)]
-    [SerializeField] private GameObject startingLevel;
     [SerializeField] private GameObject[] posibleFillLevels;
     [SerializeField] private GameObject[] posibleEndingLevels;
+
+    [SerializeField] private List<GameObject> currentLevels = new List<GameObject>();
     private float originalHeight;
 
     private void Awake()
@@ -28,36 +29,25 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         originalHeight = transform.position.y;
-        GameManager.Instance.onPlayerCollideTrigger += StopMoving;
-        maxHeight = (totalFillLevels + 1) * 10;
+        GameManager.Instance.onPlayerCollideTrigger += PauseMovement;
+        GameManager.Instance.onOxygenEnd += StopMovement;
+
     }
 
     private void OnEnable()
     {
-        if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger += StopMoving;
+        if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger += PauseMovement;
+        if (GameManager.Instance) GameManager.Instance.onOxygenEnd += StopMovement;
     }
 
     private void OnDisable()
     {
-        if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger -= StopMoving;
+        if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger -= PauseMovement;
+        if (GameManager.Instance) GameManager.Instance.onOxygenEnd -= StopMovement;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            StartGoingDown();
-            GameManager.Instance.OnGameStart();
-        } else if (Input.GetKeyDown(KeyCode.U))
-        {
-            StartGoingUp();
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            HandleLevelGeneration();
-        }
-
         if (moving) HandleLevelMovement();
     }
 
@@ -69,33 +59,39 @@ public class LevelManager : MonoBehaviour
             {
                 transform.Translate(Vector2.up * verticalSpeed * CustomTime.DeltaTime);
             }
-            else StopMoving();
+            else PauseMovement();
         } else
         {
             if (transform.position.y > originalHeight)
             {
                 transform.Translate(Vector2.down * verticalSpeed * CustomTime.DeltaTime);
             }
-            else StopMoving();
+            else PauseMovement();
         }
 
     }
-
-    private void HandleLevelGeneration()
+    int totalGeneration;
+    public void HandleLevelGeneration()
     {
-        Instantiate(startingLevel, transform.position, Quaternion.identity,transform);
+        //  Instantiate(startingLevel, transform.position, Quaternion.identity,transform);
+        totalGeneration = baseFillLevels + GameManager.Instance.level;
+        maxHeight = (totalGeneration + 1) * 10;
         Vector2 fragmentPosition = transform.position;
         fragmentPosition.y -= levelSeparation;
-        for (int i = 0;i < totalFillLevels; i++)
+        for (int i = 0;i < totalGeneration; i++)
         {
-            Instantiate(posibleFillLevels[Random.Range(0, posibleFillLevels.Length)], fragmentPosition, Quaternion.identity, transform);
+            GameObject level = Instantiate(posibleFillLevels[Random.Range(0, posibleFillLevels.Length)],
+                fragmentPosition, Quaternion.identity, transform);
+            currentLevels.Add(level);
             fragmentPosition.y -= levelSeparation;
         }
-        Instantiate(posibleEndingLevels[Random.Range(0, posibleEndingLevels.Length)], fragmentPosition, Quaternion.identity, transform);
+        GameObject final = Instantiate(posibleEndingLevels[Random.Range(0, posibleEndingLevels.Length)],
+            fragmentPosition, Quaternion.identity, transform);
+        currentLevels.Add(final);
 
     }
 
-    private void StartGoingDown()
+    public void StartGoingDown()
     {
         direction = MovementDirection.down;
         GameManager.Instance.SetGameState(GameManager.GameState.moving);
@@ -108,11 +104,27 @@ public class LevelManager : MonoBehaviour
         GameManager.Instance.SetGameState(GameManager.GameState.moving);
         moving = true;
     }
+    
+    private void StopMovement()
+    {
+        moving = false;
+        GameManager.Instance.SetGameState(GameManager.GameState.paused);
+    }
 
-    private void StopMoving()
+    private void PauseMovement()
     {
         moving = false;
         GameManager.Instance.SetGameState(GameManager.GameState.waiting);
+    }
+
+    public void CleanLevelList()
+    {
+        if (currentLevels.Count == 0) return;
+        foreach(GameObject go in currentLevels)
+        {
+            Destroy(go);
+        }
+        currentLevels.Clear();
     }
 
     private enum MovementDirection { up, down}

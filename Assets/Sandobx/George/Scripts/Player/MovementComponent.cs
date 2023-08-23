@@ -12,7 +12,8 @@ public class MovementComponent : MonoBehaviour
     [Header("Constrains"), Space(10)]
     [SerializeField] private float rangeConstrain = 3.0f;
     [SerializeField] private float verticalRangeConstrain;
-    
+
+    private Vector2 originalPosition;
     Vector2 moveDir;
     private void OnDrawGizmosSelected()
     {
@@ -25,6 +26,8 @@ public class MovementComponent : MonoBehaviour
         if (InputComponent.Instance) InputComponent.Instance.movementTrigger += HandleMovement;
         if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger += StopMoving;
         if (GameManager.Instance) GameManager.Instance.onLevelEnd += StopMoving;
+        if (GameManager.Instance) GameManager.Instance.onOxygenEnd += StopMoving;
+        if (GameManager.Instance) GameManager.Instance.onGameStart += PlacePlayerOnPoint;
     }
 
     private void OnDisable()
@@ -32,6 +35,8 @@ public class MovementComponent : MonoBehaviour
         if(InputComponent.Instance) InputComponent.Instance.movementTrigger -= HandleMovement;
         if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger -= StopMoving;
         if (GameManager.Instance) GameManager.Instance.onLevelEnd -= StopMoving;
+        if (GameManager.Instance) GameManager.Instance.onOxygenEnd -= StopMoving;
+        if (GameManager.Instance) GameManager.Instance.onGameStart -= PlacePlayerOnPoint;
     }
 
     private void Start()
@@ -39,10 +44,15 @@ public class MovementComponent : MonoBehaviour
         InputComponent.Instance.movementTrigger += HandleMovement;
         GameManager.Instance.onPlayerCollideTrigger += StopMoving;
         GameManager.Instance.onLevelEnd += StopMoving;
+        GameManager.Instance.onOxygenEnd += StopMoving;
+        GameManager.Instance.onGameStart += PlacePlayerOnPoint;
+
+        originalPosition = transform.position;
     }
     private void HandleMovement(Vector2 direction)
     {
         if (!canMove) return;
+        if (GameManager.Instance.gameState == GameManager.GameState.finished || GameManager.Instance.gameState == GameManager.GameState.paused) return;
         moveDir = direction;
         float hSpeed = horizontalSpeed;
         float vSpeed = verticalSpeed;
@@ -69,6 +79,11 @@ public class MovementComponent : MonoBehaviour
         transform.Translate(moveDir * new Vector2(hSpeed, vSpeed) * CustomTime.DeltaTime);
     }
 
+    private void PlacePlayerOnPoint()
+    {
+        transform.position = originalPosition;
+        canMove = true;
+    }
     public void StopMoving()
     {
         canMove = false;

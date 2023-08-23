@@ -7,8 +7,10 @@ public class InputComponent : MonoBehaviour
     public static InputComponent Instance { get; private set; }
 
     public delegate void MovementEvent(Vector2 value);
+    public delegate void ShootEvent();
 
     public event MovementEvent movementTrigger;
+    public event ShootEvent shotTrigger;
 
     private UserInput inputActions;
     private void Awake()
@@ -16,6 +18,8 @@ public class InputComponent : MonoBehaviour
         Instance = this;
         inputActions = new UserInput();
         inputActions.Enable();
+
+        inputActions.Player.Action.performed += _ => shotTrigger?.Invoke();
     }
 
     private void Update()

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour, ICollectable
 {
+    [SerializeField] private int pointsValue;
     public void OnCollection()
     {
         gameObject.SetActive(false);
-        GameManager.Instance.OnCoinGather();
+        GameManager.Instance.OnPointsGather(pointsValue,false);
     }
 
 }
