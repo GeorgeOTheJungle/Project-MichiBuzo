@@ -7,6 +7,10 @@ TagManager:
   - Hazard
   - Collectable
   - Goal
+  - FollowPoint
+  - Environment
+  - Info
+  - Killable
   layers:
   - Default
   - TransparentFX
@@ -16,7 +20,7 @@ TagManager:
   - UI
   - BoundaryWalls
   - CollisionWalls
-  - 
+  - Enemies
   - 
   - 
   - 
