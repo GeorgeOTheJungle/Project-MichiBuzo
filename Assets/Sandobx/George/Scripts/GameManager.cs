@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -19,6 +20,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshPro scoreText;
     [SerializeField] private TextMeshProUGUI totalScoreText;
     [SerializeField] private GameObject nextLevelButton;
+    [SerializeField] private GameObject lostLevelButton;
+    [SerializeField] private GameObject gameoverText;
     [Space(10)]
     [SerializeField] private GameObject interludeGO;
     [SerializeField] private TextMeshProUGUI interludeText;
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviour
     public void OnPlayerHit()
     {
         onPlayerCollideTrigger?.Invoke();
+        OnLevelLost();
     }
 
     public void OnOxygenEnd()
@@ -98,11 +102,18 @@ public class GameManager : MonoBehaviour
         onLevelEnd?.Invoke();
         //totalScore += storedScore;
         SetGameState(GameState.finished);
-        StartCoroutine(ScoreAnimation());
+        StartCoroutine(ScoreAnimation(false));
+    }
+
+    public void OnLevelLost()
+    {
+        onLevelEnd?.Invoke();
+        SetGameState(GameState.finished);
+        StartCoroutine(ScoreAnimation(true));
     }
 
 
-    private IEnumerator ScoreAnimation()
+    private IEnumerator ScoreAnimation(bool lost)
     {
         // Player Exit Animation
         yield return new WaitForSeconds(0.5f);
@@ -119,7 +130,9 @@ public class GameManager : MonoBehaviour
         }
         storedScore = 0;
         yield return new WaitForSeconds(0.5f);
-        nextLevelButton.SetActive(true);
+        if (lost) lostLevelButton.SetActive(true);
+        else nextLevelButton.SetActive(true);
+        gameoverText.SetActive(lost);
 
     }
 
@@ -128,9 +141,17 @@ public class GameManager : MonoBehaviour
         gameState = newState;
     }
 
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     public void ShowInterludeUI()
     {
         level++;
+        lostLevelButton.SetActive(false);
+        nextLevelButton.SetActive(false);
+        gameoverText.SetActive(false);
         StartCoroutine(InterludeAnimation());
     }
 

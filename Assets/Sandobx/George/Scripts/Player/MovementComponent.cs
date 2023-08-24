@@ -87,6 +87,5 @@ public class MovementComponent : MonoBehaviour
     public void StopMoving()
     {
         canMove = false;
-        Debug.Log("I stopped!!!");
     }
 }
