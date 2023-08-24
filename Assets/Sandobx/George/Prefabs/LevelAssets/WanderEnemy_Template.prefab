@@ -47,12 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e290a7061bdc7c40a39fff9895ed9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 1
   minSpeed: 0.5
   maxSpeed: 1.2
   pointsOnKill: 100
   enemyVisual: {fileID: 4522849007134256174}
   pointsTextVisual: {fileID: 5526883920654935848}
-  canMove: 1
   range: 1.5
 --- !u!61 &2361793493205632059
 BoxCollider2D:
@@ -151,8 +151,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 38400047
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 3625043607559282579, guid: 19fb86013d8c24d6cb8410c0aadf30fa, type: 3}
   m_Color: {r: 0.8113208, g: 0.22579211, b: 0.22579211, a: 1}
