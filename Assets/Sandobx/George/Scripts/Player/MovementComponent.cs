@@ -15,6 +15,9 @@ public class MovementComponent : MonoBehaviour
 
     private Vector2 originalPosition;
     Vector2 moveDir;
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private Transform visual;
+    [SerializeField] private ParticleSystem oxygenParticles;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -77,15 +80,38 @@ public class MovementComponent : MonoBehaviour
         }
 
         transform.Translate(moveDir * new Vector2(hSpeed, vSpeed) * CustomTime.DeltaTime);
+
+        if (moveDir.x > 0.0f && isLeft) Flip();
+        else if (moveDir.x < 0.0f && !isLeft) Flip();
+
+        playerAnimator.SetBool("isMoving", direction != Vector2.zero);
+        playerAnimator.SetFloat("moveX", direction.x);
+        playerAnimator.SetFloat("moveY", direction.y);
     }
 
     private void PlacePlayerOnPoint()
     {
         transform.position = originalPosition;
         canMove = true;
+        playerAnimator.SetTrigger("gameStart");
+        oxygenParticles.Play();
     }
     public void StopMoving()
     {
         canMove = false;
+        oxygenParticles.Stop();
+    }
+
+    private bool isLeft = false;
+    private void Flip()
+    {
+        isLeft = !isLeft;
+        if (isLeft)
+        {
+            visual.localScale = new Vector2(-1, 1f);
+        } else
+        {
+            visual.localScale = new Vector2(1f, 1f);
+        }
     }
 }
