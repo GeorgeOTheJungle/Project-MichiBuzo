@@ -36,6 +36,23 @@ public class SoundWave : MonoBehaviour
         col2D.enabled = true;
         transform.SetParent(levelTransform);
         targetPoint = target;
+
+        visual.transform.right = target.position - transform.position;
+        StartCoroutine(ScaleAnimation());
+    }
+
+    private IEnumerator ScaleAnimation()
+    {
+        visual.transform.localScale = new Vector2(.25f, .25f);
+        float scaleX = .25f;
+
+        while(scaleX < 1.0f)
+        {
+            scaleX += 2.5f * CustomTime.DeltaTime;
+            visual.transform.localScale = new Vector2(scaleX, scaleX);
+            yield return new WaitForEndOfFrame();
+        }
+        visual.transform.localScale = new Vector2(1f, 1f);
     }
 
     private void ReturnToPlayer()
@@ -47,6 +64,7 @@ public class SoundWave : MonoBehaviour
         transform.SetParent(playerPosition);
 
         visual.SetActive(false);
+        StopCoroutine(ScaleAnimation());
 
     }
 

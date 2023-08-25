@@ -12,6 +12,8 @@ public class OxygenComponent : MonoBehaviour
     [SerializeField] private float currentOxygen;
 
     [SerializeField] private Image oxygenBar;
+    [SerializeField] private Animator playerAnimator;
+
 
     private void Awake()
     {
@@ -44,6 +46,8 @@ public class OxygenComponent : MonoBehaviour
             else
             {
                 // Death here
+       
+                playerAnimator.SetTrigger("death");
                 GameManager.Instance.OnOxygenEnd();
                 currentOxygen = 0f;
             }

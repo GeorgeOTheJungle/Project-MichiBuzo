@@ -5,7 +5,7 @@ using UnityEngine;
 public class CollisionComponent : MonoBehaviour
 {
     private MovementComponent movementComponent;
-
+    [SerializeField] private Animator playerAnimator;
     private void Awake()
     {
         movementComponent = GetComponent<MovementComponent>();
@@ -15,7 +15,7 @@ public class CollisionComponent : MonoBehaviour
         if (collision.CompareTag("Hazard"))
         {
             GameManager.Instance.OnPlayerHit();
-
+            playerAnimator.SetTrigger("death");
             // Art change here.
             // Sound goes here.
         } else if (collision.CompareTag("Collectable"))
