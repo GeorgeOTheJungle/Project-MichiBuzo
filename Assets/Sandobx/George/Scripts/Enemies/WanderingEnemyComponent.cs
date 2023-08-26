@@ -48,6 +48,7 @@ public class WanderingEnemyComponent : EnemyComponent
             else
             {
                 goingLeft = false;
+                if (!isLeft) Flip();
             }
         } else
         {
@@ -57,6 +58,7 @@ public class WanderingEnemyComponent : EnemyComponent
             } else
             {
                 goingLeft = true;
+                if(isLeft) Flip();
             }
         }
     }

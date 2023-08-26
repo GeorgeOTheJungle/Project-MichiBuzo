@@ -27,7 +27,11 @@ public class ChaserEnemyComponent : EnemyComponent
         if(Vector2.Distance(transform.position, playerTransform.position) < attackRange)
         {
             transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, moveSpeed * CustomTime.DeltaTime);
+
+            if (transform.position.x > playerTransform.position.x && isLeft) Flip();
+            else if (transform.position.x < playerTransform.position.x && !isLeft) Flip();
         }
+        
     }
 
     public override void Start()

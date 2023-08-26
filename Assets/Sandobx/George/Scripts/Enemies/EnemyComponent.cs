@@ -44,4 +44,20 @@ public abstract class EnemyComponent : MonoBehaviour,ITargeteable
         gameObject.SetActive(false);
     }
 
+    protected bool isLeft;
+    protected void Flip()
+    {
+        isLeft = !isLeft;
+        Vector2 newScale;
+        if (isLeft)
+        {
+            newScale =new Vector2(-1f,1f);
+            transform.localScale = newScale;
+        } else
+        {
+            newScale = new Vector2(1f, 1f);
+            transform.localScale = newScale;
+        }
+    }
+
 }
