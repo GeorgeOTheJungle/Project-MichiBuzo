@@ -31,6 +31,7 @@ public class LevelManager : MonoBehaviour
         originalHeight = transform.position.y;
         GameManager.Instance.onPlayerCollideTrigger += PauseMovement;
         GameManager.Instance.onOxygenEnd += StopMovement;
+        GameManager.Instance.onLevelEnd += StopMovement;
 
     }
 
@@ -38,12 +39,14 @@ public class LevelManager : MonoBehaviour
     {
         if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger += PauseMovement;
         if (GameManager.Instance) GameManager.Instance.onOxygenEnd += StopMovement;
+        if (GameManager.Instance) GameManager.Instance.onLevelEnd += StopMovement;
     }
 
     private void OnDisable()
     {
         if (GameManager.Instance) GameManager.Instance.onPlayerCollideTrigger -= PauseMovement;
         if (GameManager.Instance) GameManager.Instance.onOxygenEnd -= StopMovement;
+        if (GameManager.Instance) GameManager.Instance.onLevelEnd -= StopMovement;
     }
 
     private void Update()
@@ -108,12 +111,14 @@ public class LevelManager : MonoBehaviour
     private void StopMovement()
     {
         moving = false;
+        direction = MovementDirection.none;
         GameManager.Instance.SetGameState(GameManager.GameState.paused);
     }
 
     private void PauseMovement()
     {
         moving = false;
+        direction = MovementDirection.none;
         GameManager.Instance.SetGameState(GameManager.GameState.waiting);
     }
 
@@ -127,5 +132,9 @@ public class LevelManager : MonoBehaviour
         currentLevels.Clear();
     }
 
-    private enum MovementDirection { up, down}
+    public MovementDirection GetDirection()
+    {
+        return direction;
+    }
+    public enum MovementDirection { up, down,none}
 }
