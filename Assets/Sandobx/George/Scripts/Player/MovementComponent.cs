@@ -22,7 +22,7 @@ public class MovementComponent : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(Vector2.zero, new Vector2(rangeConstrain * 2f, 15f));
+        Gizmos.DrawWireCube(Vector2.zero, new Vector2(rangeConstrain * 2f, verticalRangeConstrain * 2f));
     }
 
     private void OnEnable()
@@ -69,6 +69,7 @@ public class MovementComponent : MonoBehaviour
                 break;
         }
     }
+    private float bottom;
     private void HandleMovement(Vector2 direction)
     {
         if (!canMove) return;
@@ -93,6 +94,11 @@ public class MovementComponent : MonoBehaviour
         if(moveDir.y > 0.0f)
         {
             if(transform.position.y < verticalRangeConstrain) vSpeed = verticalSpeed;
+            else vSpeed = 0f;
+        } else if(moveDir .y < -0.1f)
+        {
+            bottom = LevelManager.Instance.GetMaxHeight();
+            if (transform.position.y > -verticalRangeConstrain) vSpeed = verticalSpeed;
             else vSpeed = 0f;
         }
 
