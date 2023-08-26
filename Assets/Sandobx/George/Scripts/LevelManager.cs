@@ -94,6 +94,11 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    public float GetMaxHeight()
+    {
+        return maxHeight;
+    }
+
     public void StartGoingDown()
     {
         direction = MovementDirection.down;
