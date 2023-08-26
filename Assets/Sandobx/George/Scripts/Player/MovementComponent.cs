@@ -18,6 +18,7 @@ public class MovementComponent : MonoBehaviour
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Transform visual;
     [SerializeField] private ParticleSystem oxygenParticles;
+    [SerializeField] private Transform startingPoint;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -50,7 +51,23 @@ public class MovementComponent : MonoBehaviour
         GameManager.Instance.onOxygenEnd += StopMoving;
         GameManager.Instance.onGameStart += PlacePlayerOnPoint;
 
-        originalPosition = transform.position;
+        originalPosition = startingPoint.position;
+    }
+
+    private void Update()
+    {
+        switch (LevelManager.Instance.GetDirection())
+        {
+            case LevelManager.MovementDirection.up:
+                playerAnimator.SetFloat("dir", 1f);
+                break;
+            case LevelManager.MovementDirection.none:
+                playerAnimator.SetFloat("dir", 0f);
+                break;
+            case LevelManager.MovementDirection.down:
+                playerAnimator.SetFloat("dir", -1f);
+                break;
+        }
     }
     private void HandleMovement(Vector2 direction)
     {

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public int storedScore;
     public int totalScore;
 
+    [SerializeField] private GameObject mainMenuObjects;
     [SerializeField] private GameObject scoreUI;
     [SerializeField] private TextMeshPro scoreText;
     [SerializeField] private TextMeshProUGUI totalScoreText;
@@ -26,6 +27,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject interludeGO;
     [SerializeField] private TextMeshProUGUI interludeText;
     public GameObject goalGO;
+
+    [Space(10)]
+    [SerializeField] private GameObject mainMenu;
+    [SerializeField] private GameObject gameMenu;
+
     public delegate void StopGame();
     public delegate void StartGame();
 
@@ -34,12 +40,25 @@ public class GameManager : MonoBehaviour
     public event StopGame onLevelEnd;
     public event StopGame onOxygenEnd;
 
+
     private const string tScore = "Score: ";
     private const string tscoreText = "Total Score: ";
     private const string levelText = "Level - ";
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        InputComponent.Instance.startTrigger += ShowInterludeUI;
+        InputComponent.Instance.startTrigger += RestartGame;
+    }
+
+    private void OnDisable()
+    {
+        InputComponent.Instance.startTrigger -= ShowInterludeUI;
+        InputComponent.Instance.startTrigger -= RestartGame;
     }
 
     public void OnPlayerHit()
@@ -90,6 +109,7 @@ public class GameManager : MonoBehaviour
         SetGameState(GameState.moving);
         UpdateUI();
         onGameStart?.Invoke();
+        mainMenuObjects.SetActive(false);
     }
 
     private void UpdateUI()
@@ -112,12 +132,15 @@ public class GameManager : MonoBehaviour
         StartCoroutine(ScoreAnimation(true));
     }
 
+    private bool canRestart = false;
 
     private IEnumerator ScoreAnimation(bool lost)
     {
         // Player Exit Animation
+        AudioManager.Instance.StopSong();
         yield return new WaitForSeconds(0.5f);
         scoreUI.SetActive(true);
+        gameoverText.SetActive(lost);
         yield return new WaitForSeconds(0.75f);
         while(storedScore > 0)
         {
@@ -130,10 +153,15 @@ public class GameManager : MonoBehaviour
         }
         storedScore = 0;
         yield return new WaitForSeconds(0.5f);
-        if (lost) lostLevelButton.SetActive(true);
-        else nextLevelButton.SetActive(true);
-        gameoverText.SetActive(lost);
-
+        if (lost) {
+            canRestart = true;
+            lostLevelButton.SetActive(true);
+        }  else
+        {
+            inGame = false;
+            nextLevelButton.SetActive(true);
+        }
+ 
     }
 
     public void SetGameState(GameState newState)
@@ -143,11 +171,18 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        if (canRestart == false) return;
         SceneManager.LoadScene(0);
     }
 
     public void ShowInterludeUI()
     {
+        if (canRestart) return;
+        if (inGame) return;
+        inGame = true;
+        gameMenu.SetActive(true);
+        mainMenu.SetActive(false);
+
         level++;
         lostLevelButton.SetActive(false);
         nextLevelButton.SetActive(false);
@@ -155,9 +190,12 @@ public class GameManager : MonoBehaviour
         StartCoroutine(InterludeAnimation());
     }
 
+    private bool inGame = false;
 
     private IEnumerator InterludeAnimation()
     {
+
+        AudioManager.Instance.StopSong();
         LevelManager.Instance.CleanLevelList();
         scoreUI.SetActive(false);
         interludeGO.SetActive(true);
@@ -165,6 +203,7 @@ public class GameManager : MonoBehaviour
         interludeText.text = levelText + level.ToString();
         LevelManager.Instance.HandleLevelGeneration();
         yield return new WaitForSeconds(1.5f);
+        AudioManager.Instance.PlaySong(false);
         interludeGO.SetActive(false);
         LevelManager.Instance.StartGoingDown();
         OnGameStart();
