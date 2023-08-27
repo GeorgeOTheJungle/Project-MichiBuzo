@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 38400047
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 73307550, guid: 7210f007912b8a346a0a7e929258d607, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -182,6 +182,7 @@ MonoBehaviour:
   pointsOnKill: 50
   enemyVisual: {fileID: 8692234350802166497}
   pointsTextVisual: {fileID: 6206862023724745030}
+  id: 4
   attackRange: 4
   moveSpeed: 100
 --- !u!61 &-7104010475521980396

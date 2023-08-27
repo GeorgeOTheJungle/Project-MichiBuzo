@@ -13,6 +13,7 @@ public abstract class EnemyComponent : MonoBehaviour,ITargeteable
 
     [SerializeField] private GameObject enemyVisual;
     [SerializeField] private GameObject pointsTextVisual;
+    [SerializeField] protected int id;
     private TextMeshPro pointsText;
 
     private Collider2D col2D;
@@ -33,6 +34,7 @@ public abstract class EnemyComponent : MonoBehaviour,ITargeteable
     public virtual void OnKill()
     {
         canMove = false;
+        AudioManager.Instance.PlaySfx(id);
         enemyVisual.SetActive(false);
         pointsTextVisual.SetActive(true);
         col2D.enabled = false;
