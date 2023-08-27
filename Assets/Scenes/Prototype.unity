@@ -6753,6 +6753,7 @@ MonoBehaviour:
   - {fileID: 169522747343250289, guid: 744e3eb6417ae7c44b3a5464640dbf50, type: 3}
   - {fileID: 169522747343250289, guid: f2a3e5fc278163d47ba842e0791e488e, type: 3}
   - {fileID: 169522747343250289, guid: c75411da56e3b5a4c8d8ad535350aae8, type: 3}
+  - {fileID: 169522747343250289, guid: 66ff70b23cacf2445af5c428c72d0a19, type: 3}
   posibleEndingLevels:
   - {fileID: 4939630031581674376, guid: 002383f76942b7f449c1bec87e7a6a53, type: 3}
   currentLevels: []
