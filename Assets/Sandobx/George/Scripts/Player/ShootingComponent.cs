@@ -51,5 +51,6 @@ public class ShootingComponent : MonoBehaviour
     {
         if (target == null) return;
         soundWave.LaunchWave(target);
+        AudioManager.Instance.PlaySfx(1);
     }
 }

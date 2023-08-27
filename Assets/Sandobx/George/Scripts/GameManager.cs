@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
     public void OnOxygenEnd()
     {
         onOxygenEnd?.Invoke();
+        OnLevelLost();
     }
 
     private void Update()
@@ -139,19 +140,21 @@ public class GameManager : MonoBehaviour
         // Player Exit Animation
         AudioManager.Instance.StopSong();
         yield return new WaitForSeconds(0.5f);
+        AudioManager.Instance.PlaySfx(lost?9:8);
         scoreUI.SetActive(true);
         gameoverText.SetActive(lost);
         yield return new WaitForSeconds(0.75f);
         while(storedScore > 0)
         {
-            storedScore -= 3;
-            totalScore += 3;
+            storedScore -= 5;
+            totalScore += 5;
             UpdateUI();
             if (storedScore < 0) storedScore = 0;
             totalScoreText.SetText(tscoreText + totalScore.ToString());
             yield return new WaitForEndOfFrame();
         }
         storedScore = 0;
+        UpdateUI();
         yield return new WaitForSeconds(0.5f);
         if (lost) {
             canRestart = true;
@@ -183,6 +186,7 @@ public class GameManager : MonoBehaviour
         gameMenu.SetActive(true);
         mainMenu.SetActive(false);
 
+        AudioManager.Instance.PlaySfx(7);
         level++;
         lostLevelButton.SetActive(false);
         nextLevelButton.SetActive(false);

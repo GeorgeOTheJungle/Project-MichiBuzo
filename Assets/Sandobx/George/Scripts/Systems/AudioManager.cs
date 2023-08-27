@@ -9,6 +9,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip gameSong;
     private AudioSource audioSource;
 
+    [SerializeField] private AudioClip[] audios;
+    [SerializeField] private AudioSource sfxSource;
+
     private void Awake()
     {
         Instance = this;
@@ -34,5 +37,11 @@ public class AudioManager : MonoBehaviour
     {
         audioSource.clip = song;
         audioSource.Play();
+    }
+
+    public void PlaySfx(int id)
+    {
+        sfxSource.clip = audios[id];
+        sfxSource.Play();
     }
 }

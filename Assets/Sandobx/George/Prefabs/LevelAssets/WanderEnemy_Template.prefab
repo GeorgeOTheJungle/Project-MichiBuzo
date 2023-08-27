@@ -53,6 +53,7 @@ MonoBehaviour:
   pointsOnKill: 100
   enemyVisual: {fileID: 4522849007134256174}
   pointsTextVisual: {fileID: 5526883920654935848}
+  id: 4
   range: 1.5
 --- !u!61 &2361793493205632059
 BoxCollider2D:
@@ -154,7 +155,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 38400047
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 2020287114, guid: a6b066b76828d5c408f25000f17e253a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

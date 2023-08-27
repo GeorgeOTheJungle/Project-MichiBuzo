@@ -16,6 +16,7 @@ public class CollisionComponent : MonoBehaviour
         {
             GameManager.Instance.OnPlayerHit();
             playerAnimator.SetTrigger("death");
+            AudioManager.Instance.PlaySfx(3);
             // Art change here.
             // Sound goes here.
         } else if (collision.CompareTag("Collectable"))
